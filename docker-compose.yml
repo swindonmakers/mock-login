@@ -1,0 +1,20 @@
+services:
+  mock-oneall:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config:/app/config
+    environment:
+      - CONFIG_PATH=/app/config/users.yaml
+      - PORT=8080
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app

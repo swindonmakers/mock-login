@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript">
+        async function loadProfile() {
+            const connection_token = localStorage.getItem('connectionToken');
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/connections/${connection_token}.json`, 
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                
+                const data = await response.json();
+
+                 if (data.response.result &&
+                    data.response.result.status.flag === 'success' &&
+                    data.response.result.data.connection.connection_token === connection_token) {
+
+                    // Get user data
+                    const user = data.response.result.data.user;
+                    const identity = user.identity;
+
+                    // Update the page content
+                    document.getElementById('greeting').textContent = `Hello ${identity.displayName}!`;
+                    document.getElementById('profile-info').innerHTML = `
+                        <p><strong>Email:</strong> ${identity.emails[0].value}</p>
+                        <p><strong>Provider:</strong> ${identity.provider}</p>
+                        <p><strong>Username:</strong> ${identity.accounts[0].username}</p>
+                        <p><strong>User Token:</strong> ${user.user_token}</p>
+                        <p><strong>Connection Token:</strong> ${connection_token}</p>
+                    `;
+                } else {
+                    throw new Error('Authentication failed: Invalid or expired token');
+                }
+            } catch (error) {
+                document.getElementById('error-message').textContent = 
+                    'Error: ' + error.message;
+            }
+        }
+
+        async function loadSessions() {
+            const currentToken = localStorage.getItem('connectionToken');
+            try {
+                const response = await fetch('http://localhost:8080/connections.json', {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                const sessions = data.response.result.data.connections.entries;
+                
+                const sessionsList = document.getElementById('sessions-list');
+                sessionsList.innerHTML = sessions.map(session => `
+                    <div class="p-4 border-b ${session.connection_token === currentToken ? 'bg-yellow-100' : 'bg-white hover:bg-gray-100 cursor-pointer'}"
+                         onclick="switchSession('${session.connection_token}')"
+                         title="Click to switch session">
+                        <p><strong>Token:</strong> ${session.connection_token}</p>
+                        <p><strong>Email:</strong> ${session.email}</p>
+                        <p><strong>Status:</strong> ${session.status}</p>
+                        <p><strong>Created:</strong> ${session.date_creation}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('modal-error').textContent = 'Error loading sessions: ' + error.message;
+            }
+        }
+
+        function switchSession(token) {
+            if (token !== localStorage.getItem('connectionToken')) {
+                localStorage.setItem('connectionToken', token);
+                window.location.reload();
+            }
+        }
+
+        function toggleModal() {
+            const modal = document.getElementById('sessions-modal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                loadSessions();
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // Load profile when page loads
+        window.addEventListener('load', loadProfile);
+    </script>
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+            <div class="md:flex">
+                <div class="p-8">
+                    <h2 id="greeting" class="text-2xl font-semibold text-gray-900">Loading...</h2>
+                    <div id="profile-info" class="mt-4 text-gray-700"></div>
+                    <div id="error-message" class="mt-4 text-red-500"></div>
+                    <a href="http://localhost:8080" class="text-blue-500"><button class="bg-teal-500 text-white px-4 py-2 rounded">Home</button></a>
+                    <button onclick="toggleModal()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">View Active Sessions</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sessions-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+        <div class="fixed inset-0 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-1/2">
+                <h2 class="text-xl font-semibold mb-4">Active Sessions</h2>
+                <div id="sessions-list" class="mb-4"></div>
+                <div id="modal-error" class="text-red-500 mb-4"></div>
+                <button onclick="toggleModal()" class="bg-red-500 text-white px-4 py-2 rounded">Close</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
