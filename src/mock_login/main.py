@@ -5,7 +5,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uuid
 import aiohttp
-import requests
 from contextlib import asynccontextmanager
 from pathlib import Path
 import os
