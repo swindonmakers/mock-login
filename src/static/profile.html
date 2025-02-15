@@ -10,7 +10,7 @@
             const connection_token = localStorage.getItem('connectionToken');
             try {
                 const response = await fetch(
-                    `http://localhost:8080/connections/${connection_token}.json`, 
+                    `http://localhost:8089/connections/${connection_token}.json`, 
                     {
                         headers: {
                             'Content-Type': 'application/json'
@@ -49,7 +49,7 @@
         async function loadSessions() {
             const currentToken = localStorage.getItem('connectionToken');
             try {
-                const response = await fetch('http://localhost:8080/connections.json', {
+                const response = await fetch('http://localhost:8089/connections.json', {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -104,7 +104,7 @@
                     <h2 id="greeting" class="text-2xl font-semibold text-gray-900">Loading...</h2>
                     <div id="profile-info" class="mt-4 text-gray-700"></div>
                     <div id="error-message" class="mt-4 text-red-500"></div>
-                    <a href="http://localhost:8080" class="text-blue-500"><button class="bg-teal-500 text-white px-4 py-2 rounded">Home</button></a>
+                    <a href="http://localhost:8089" class="text-blue-500"><button class="bg-teal-500 text-white px-4 py-2 rounded">Home</button></a>
                     <button onclick="toggleModal()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">View Active Sessions</button>
                 </div>
             </div>

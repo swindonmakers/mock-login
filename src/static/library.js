@@ -2,8 +2,8 @@
 (function() {
     window._oneall = window._oneall || [];
 
-    // define the endpoint for the mock server with port 8080
-    const mockServer = 'http://localhost:8080';
+    // define the endpoint for the mock server with port 8089
+    const mockServer = 'http://localhost:8089';
     
     class MockOneAll {
         constructor() {

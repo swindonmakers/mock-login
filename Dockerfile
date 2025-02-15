@@ -12,13 +12,13 @@ COPY src/ .
 RUN mkdir -p /app/config
 VOLUME ["/app/config"]
 
-# Expose the port
-EXPOSE 8080
-
 # Set environment variables
 ENV CONFIG_PATH=/app/config/users.yaml
 ENV HOST=0.0.0.0
-ENV PORT=8080
+ENV PORT=8089
+
+# Expose the port
+EXPOSE ${PORT}
 
 # Run the application
-CMD ["uvicorn", "mock_login.main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "8080"]
+CMD uvicorn mock_login.main:app --proxy-headers --host ${HOST} --port ${PORT}
