@@ -1,6 +1,0 @@
-fastapi==0.115.6
-pyyaml==6.0.2
-pydantic==2.10.4
-python-multipart==0.0.20
-uvicorn==0.34.0
-aiohttp==3.11.2
