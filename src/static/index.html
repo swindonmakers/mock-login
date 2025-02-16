@@ -23,6 +23,9 @@
             <div class="p-8">
                 <h2 class="text-2xl font-semibold text-gray-900 mb-6">Welcome! Please sign in</h2>
                 <div id="oa_social_login_container"></div>
+                <div class="text-sm text-gray-500 mt-4">
+                    <a href="/docs/" class="text-blue-500 hover:text-blue-700" target="_blank">Mock Login API Documentation</a>
+                </div>
             </div>
         </div>
     </div>
@@ -34,7 +37,7 @@
     
       /* Embeds the buttons into the container oa_social_login_container */
       var _oneall = _oneall || [];
-      _oneall.push(['social_login', 'set_providers', ['github','google']]);
+      _oneall.push(['social_login', 'set_providers', ['mock_github','mock_google']]);
       _oneall.push(['social_login', 'set_callback_uri', your_callback_script]);
       _oneall.push(['social_login', 'do_render_ui', 'oa_social_login_container']);
     
