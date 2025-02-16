@@ -189,16 +189,27 @@
             const container = document.getElementById(containerId);
             if (!container) return;
 
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.display = 'flex';
+            buttonContainer.style.gap = '10px';
+            buttonContainer.style.flexWrap = 'wrap';
+
+            this.providers.forEach(provider => {
             const button = document.createElement('button');
-            button.textContent = 'Test Login';
+                button.textContent = `Login with ${provider}`;
             button.className = 'mock-oneall-button';
+                button.dataset.provider = provider;
+                buttonContainer.appendChild(button);
+
+                button.onclick = () => {
+                    modal.style.display = 'block';
+                };
+            });
+
+            const allButtons = buttonContainer.querySelectorAll('button');
             
             const modal = this.createModal();
             this.populateUserList(modal);
-
-            button.onclick = () => {
-                modal.style.display = 'block';
-            };
 
             // Setup login button handler
             modal.querySelector('.mock-oneall-button').onclick = async () => {
@@ -208,7 +219,7 @@
             };
 
             container.innerHTML = '';
-            container.appendChild(button);
+            container.appendChild(buttonContainer);
         }
 
         async handleLogin(input) {
