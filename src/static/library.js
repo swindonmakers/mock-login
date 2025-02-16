@@ -95,9 +95,9 @@
 
         async loadTestUsers() {
             try {
-                const response = await fetch(`${mockServer}/mock-oneall/users`);
+                const response = await fetch(`${mockServer}/users.json`);
                 const data = await response.json();
-                return data.response.result.data.users;
+                return data.response.result.data.users.entities;
             } catch (error) {
                 console.error('Failed to load test users:', error);
                 return [];
@@ -195,9 +195,9 @@
             buttonContainer.style.flexWrap = 'wrap';
 
             this.providers.forEach(provider => {
-            const button = document.createElement('button');
+                const button = document.createElement('button');
                 button.textContent = `Login with ${provider}`;
-            button.className = 'mock-oneall-button';
+                button.className = 'mock-oneall-button';
                 button.dataset.provider = provider;
                 buttonContainer.appendChild(button);
 
@@ -224,7 +224,7 @@
 
         async handleLogin(input) {
             try {
-                const response = await fetch(`${mockServer}/mock-oneall/auth`, {
+                const response = await fetch(`${mockServer}/socialize/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

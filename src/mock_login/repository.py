@@ -4,10 +4,9 @@ import logging
 from typing import Dict, List
 from datetime import datetime
 
-logger = logging.getLogger(__name__)
-
 class Repository:
-    def __init__(self):
+    def __init__(self, logger=None):
+        self.logger = logger or logging.getLogger(__name__)
         self.connections: Dict[str, dict] = {}
         self.test_users = self.load_test_users()
 
@@ -17,10 +16,10 @@ class Repository:
         try:
             with open(config_path) as f:
                 users = yaml.safe_load(f)
-                logger.info(f"Loaded {len(users)} test users from configuration")
+                self.logger.info(f"Loaded {len(users)} test users from configuration")
                 return users
         except Exception as e:
-            logger.error(f"Failed to load test users: {e}")
+            self.logger.error(f"Failed to load test users: {e}")
             return []
 
     def store_connection_data(self, connection_token: str, test_user: dict):
@@ -46,8 +45,8 @@ class Repository:
                 }
             }
         }
-        logger.info(f"Created connection {connection_token} for test user {test_user['username']}")
-        logger.info(f"Connection details: {self.connections[connection_token]}")
+        self.logger.info(f"Created connection {connection_token} for test user {test_user['username']}")
+        self.logger.info(f"Connection details: {self.connections[connection_token]}")
 
     def get_connection(self, connection_token: str) -> dict:
         """Retrieve connection details"""
