@@ -196,7 +196,7 @@
 
             this.providers.forEach(provider => {
                 const button = document.createElement('button');
-                button.textContent = `Login with ${provider}`;
+                button.textContent = `Login with mock ${provider.charAt(0).toUpperCase() + provider.slice(1)}`;
                 button.className = 'mock-oneall-button';
                 button.dataset.provider = provider;
                 buttonContainer.appendChild(button);
@@ -252,8 +252,15 @@
                 const connectionToken = data.response.connection_token;
                 const redirectUrl = data.response.redirect_url;
                 localStorage.setItem('connectionToken', connectionToken);
-                // window.location.href = `/${redirectUrl}?connection_token=${connectionToken}`;
-                window.location.href = `/${redirectUrl}`;
+                console.log('Mock OneAll: Login successful', connectionToken, redirectUrl);
+                if (redirectUrl.startsWith('<!DOCTYPE html>')) {
+                    // Display the HTML content received in the redirect URL
+                    document.open();
+                    document.write(redirectUrl);
+                    document.close();
+                } else {
+                    window.location.href = `/${redirectUrl}`;
+                }
                 
             } catch (error) {
                 console.error('Mock OneAll: Login failed', error);

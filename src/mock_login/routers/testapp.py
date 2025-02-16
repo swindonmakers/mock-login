@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse, HTMLResponse
 import logging
 
 
@@ -35,15 +35,26 @@ async def handle_testapp_callback(request: Request):
     return "testapp/profile"
 
 
-@router.get("/profile")
-async def serve_testapp_profile():
+@router.get(
+    "/profile",
+    responses={
+        200: {
+            "content": {"text/html": {}},
+            "description": "User profile page for Mock Login Test App",
+        },
+        404: {
+            "content": {"text/html": {}},
+            "description": "Profile page not found",
+        },
+    },
+)
+async def serve_testapp_profile() -> HTMLResponse:
     """Serve user profile page for Mock Login Test App"""
     try:
         with open("static/profile.html", "r") as f:
             content = f.read()
-        return Response(content=content, media_type="text/html")
+        return HTMLResponse(content=content)
     except FileNotFoundError:
         raise HTTPException(
             status_code=404, detail="Profile page (profile.html) not found"
         )
-
