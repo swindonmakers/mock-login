@@ -2,13 +2,13 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
-RUN pip install poetry==2.1.0
-COPY pyproject.toml poetry.lock poetry.toml ./
-RUN poetry install --no-interaction --no-root
+COPY --from=ghcr.io/astral-sh/uv:0.9.18 /uv /uvx /bin/
+
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
 
 COPY src/ README.md LICENSE ./
-RUN poetry build --no-interaction \
-    && poetry install --no-interaction
+RUN uv sync --frozen --no-dev
 
 # Create volume mount point for fixtures
 RUN mkdir -p /app/config
