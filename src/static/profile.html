@@ -10,17 +10,17 @@
             const connection_token = localStorage.getItem('connectionToken');
             try {
                 const response = await fetch(
-                    `http://localhost:8089/connections/${connection_token}.json`, 
+                    `/connections/${connection_token}.json`,
                     {
                         headers: {
                             'Content-Type': 'application/json'
                         }
                     }
                 );
-                
+
                 const data = await response.json();
 
-                 if (data.response.result &&
+                if (data.response.result &&
                     data.response.result.status.flag === 'success' &&
                     data.response.result.data.connection.connection_token === connection_token) {
 
@@ -41,7 +41,7 @@
                     throw new Error('Authentication failed: Invalid or expired token');
                 }
             } catch (error) {
-                document.getElementById('error-message').textContent = 
+                document.getElementById('error-message').textContent =
                     'Error: ' + error.message;
             }
         }
@@ -49,15 +49,15 @@
         async function loadSessions() {
             const currentToken = localStorage.getItem('connectionToken');
             try {
-                const response = await fetch('http://localhost:8089/connections.json', {
+                const response = await fetch('/connections.json', {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
-                
+
                 const data = await response.json();
                 const sessions = data.response.result.data.connections.entries;
-                
+
                 const sessionsList = document.getElementById('sessions-list');
                 sessionsList.innerHTML = sessions.map(session => `
                     <div class="p-4 border-b ${session.connection_token === currentToken ? 'bg-yellow-100' : 'bg-white hover:bg-gray-100 cursor-pointer'}"
@@ -104,8 +104,12 @@
                     <h2 id="greeting" class="text-2xl font-semibold text-gray-900">Loading...</h2>
                     <div id="profile-info" class="mt-4 text-gray-700"></div>
                     <div id="error-message" class="mt-4 text-red-500"></div>
-                    <a href="http://localhost:8089" class="text-blue-500"><button class="bg-teal-500 text-white px-4 py-2 rounded">Home</button></a>
-                    <button onclick="toggleModal()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">View Active Sessions</button>
+                    <a href="/" class="text-blue-500">
+                        <button class="bg-teal-500 text-white px-4 py-2 rounded">Home</button>
+                    </a>
+                    <button onclick="toggleModal()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+                        View Active Sessions
+                    </button>
                 </div>
             </div>
         </div>

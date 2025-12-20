@@ -189,7 +189,7 @@ async def serve_library():
     This replaces the real OneAll library in the frontend.
     """
     try:
-        with open("static/library.js", "r") as f:
+        with open("src/static/library.js", "r") as f:
             content = f.read()
         return Response(content=content, media_type="application/javascript")
     except FileNotFoundError:

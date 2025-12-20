@@ -12,15 +12,19 @@ class Repository:
 
     def load_test_users(self) -> List[dict]:
         """Load test users from configuration file"""
-        config_path = os.getenv('CONFIG_PATH', '../config/users.yaml')
+        config_path = os.getenv('CONFIG_PATH', 'src/config/fallback_test_users.yaml')
         try:
             with open(config_path) as f:
                 users = yaml.safe_load(f)
                 self.logger.info(f"Loaded {len(users)} test users from configuration")
                 return users
         except Exception as e:
-            self.logger.error(f"Failed to load test users: {e}")
-            return []
+            self.logger.warning(f"Failed to load test users: {e}")
+            self.logger.info(f"Using fallback test users")
+            with open('src/config/fallback_test_users.yaml') as f:
+                users = yaml.safe_load(f)
+                self.logger.info(f"Loaded {len(users)} fallback test users")
+                return users
 
     def store_connection_data(self, connection_token: str, test_user: dict):
         """Store connection data"""
