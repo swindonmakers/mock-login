@@ -21,7 +21,7 @@ router = APIRouter()
 async def serve_testapp_index() -> HTMLResponse:
     """Serve a basic HTML page for Mock Login Test App"""
     try:
-        with open("static/index.html", "r") as f:
+        with open("src/static/index.html", "r") as f:
             content = f.read()
         return HTMLResponse(content=content)
     except FileNotFoundError:

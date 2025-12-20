@@ -51,7 +51,7 @@ async def handle_testapp_callback(request: Request):
 async def serve_testapp_profile() -> HTMLResponse:
     """Serve user profile page for Mock Login Test App"""
     try:
-        with open("static/profile.html", "r") as f:
+        with open("src/static/profile.html", "r") as f:
             content = f.read()
         return HTMLResponse(content=content)
     except FileNotFoundError:

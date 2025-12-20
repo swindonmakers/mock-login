@@ -1,11 +1,17 @@
+import importlib.metadata
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .routers import oneall, testapp, main
 
+try:
+    __version__ = importlib.metadata.version("mock-login")
+except importlib.metadata.PackageNotFoundError:
+    __version__ = "unknown"
 
 app = FastAPI(
     title="Mock OneAll Service",
+    version=__version__,
 )
 
 # Enable CORS

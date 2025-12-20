@@ -1,10 +1,7 @@
 // Mock OneAll Library
-(function() {
+(function () {
     window._oneall = window._oneall || [];
 
-    // define the endpoint for the mock server with port 8089
-    const mockServer = 'http://localhost:8089';
-    
     class MockOneAll {
         constructor() {
             this.providers = [];
@@ -95,7 +92,7 @@
 
         async loadTestUsers() {
             try {
-                const response = await fetch(`${mockServer}/users.json`);
+                const response = await fetch('/users.json');
                 const data = await response.json();
                 return data.response.result.data.users.entities;
             } catch (error) {
@@ -156,10 +153,10 @@
 
         processCommand(args) {
             const [service, command, ...params] = args;
-            
+
             if (service !== 'social_login') return;
-            
-            switch(command) {
+
+            switch (command) {
                 case 'set_providers':
                     this.setProviders(params[0]);
                     break;
@@ -185,7 +182,7 @@
         renderUI(containerId) {
             console.log('Mock: Rendering UI in', containerId);
             this.containerId = containerId;
-            
+
             const container = document.getElementById(containerId);
             if (!container) return;
 
@@ -207,7 +204,7 @@
             });
 
             const allButtons = buttonContainer.querySelectorAll('button');
-            
+
             const modal = this.createModal();
             this.populateUserList(modal);
 
@@ -224,7 +221,7 @@
 
         async handleLogin(input) {
             try {
-                const response = await fetch(`${mockServer}/socialize/login`, {
+                const response = await fetch('/socialize/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -239,15 +236,15 @@
                 });
 
                 if (!response.ok) throw new Error('Auth failed');
-                
+
                 const data = await response.json();
-                
+
                 // Check if authentication was successful
                 if (data.response.result.status.flag === 'error') {
                     alert('Authentication failed: ' + data.response.result.status.info);
                     return;
                 }
-                
+
                 // Redirect to callback URL with connection token
                 const connectionToken = data.response.connection_token;
                 const redirectUrl = data.response.redirect_url;
@@ -261,7 +258,7 @@
                 } else {
                     window.location.href = `/${redirectUrl}`;
                 }
-                
+
             } catch (error) {
                 console.error('Mock OneAll: Login failed', error);
                 alert('Login failed: ' + error.message);
@@ -277,7 +274,7 @@
     window._oneall = {
         push: (args) => mockOneAll.processCommand(args)
     };
-    
+
     if (Array.isArray(queued)) {
         queued.forEach(args => mockOneAll.processCommand(args));
     }
